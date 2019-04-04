@@ -1,19 +1,18 @@
-# skeleton-generic #
+# skeleton-python-library #
 
-[![GitHub Build Status](https://github.com/cisagov/skeleton-generic/workflows/build/badge.svg)](https://github.com/cisagov/skeleton-generic/actions)
-[![License](https://img.shields.io/github/license/cisagov/skeleton-generic
-)](https://spdx.org/licenses/)
-[![CodeQL](https://github.com/cisagov/skeleton-generic/workflows/CodeQL/badge.svg)](https://github.com/cisagov/skeleton-generic/actions/workflows/codeql-analysis.yml)
+[![GitHub Build Status](https://github.com/cisagov/skeleton-python-library/workflows/build/badge.svg)](https://github.com/cisagov/skeleton-python-library/actions)
+[![License](https://img.shields.io/github/license/cisagov/skeleton-python-library)](https://spdx.org/licenses/)
+[![CodeQL](https://github.com/cisagov/skeleton-python-library/workflows/CodeQL/badge.svg)](https://github.com/cisagov/skeleton-python-library/actions/workflows/codeql-analysis.yml)
+[![Coverage Status](https://coveralls.io/repos/github/cisagov/skeleton-python-library/badge.svg?branch=develop)](https://coveralls.io/github/cisagov/skeleton-python-library?branch=develop)
+[![Code Style](https://img.shields.io/badge/Code%20Style-black-black)](https://github.com/psf/black)
 
 This is a generic skeleton project that can be used to quickly get a
-new [cisagov](https://github.com/cisagov) GitHub project started.
-This skeleton project contains [licensing information](LICENSE), as
-well as [pre-commit hooks](https://pre-commit.com) and
+new [cisagov](https://github.com/cisagov) Python library GitHub
+project started.  This skeleton project contains [licensing
+information](LICENSE), as well as
+[pre-commit hooks](https://pre-commit.com) and
 [GitHub Actions](https://github.com/features/actions) configurations
-appropriate for the major languages that we use.
-
-In many cases you will instead want to use one of the more specific
-skeleton projects derived from this one.
+appropriate for a Python library project.
 
 ## New Repositories from a Skeleton ##
 

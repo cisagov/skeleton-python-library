@@ -15,8 +15,8 @@ all of which should be in this repository.
 
 If you want to report a bug or request a new feature, the most direct
 method is to [create an
-issue](https://github.com/cisagov/skeleton-generic/issues) in this
-repository.  We recommend that you first search through existing
+issue](https://github.com/cisagov/skeleton-python-library/issues) in
+this repository.  We recommend that you first search through existing
 issues (both open and closed) to check if your particular issue has
 already been reported.  If it has then you might want to add a comment
 to the existing issue.  If it hasn't then feel free to create a new
@@ -25,12 +25,12 @@ one.
 ## Pull requests ##
 
 If you choose to [submit a pull
-request](https://github.com/cisagov/skeleton-generic/pulls), you will
-notice that our continuous integration (CI) system runs a fairly
-extensive set of linters and syntax checkers.  Your pull request may
-fail these checks, and that's OK.  If you want you can stop there and
-wait for us to make the necessary corrections to ensure your code
-passes the CI checks.
+request](https://github.com/cisagov/skeleton-python-library/pulls),
+you will notice that our continuous integration (CI) system runs a
+fairly extensive set of linters, syntax checkers, system, and unit tests.
+Your pull request may fail these checks, and that's OK.  If you want
+you can stop there and wait for us to make the necessary corrections
+to ensure your code passes the CI checks.
 
 If you want to make the changes yourself, or if you want to become a
 regular contributor, then you will want to set up
@@ -145,9 +145,9 @@ can create and configure the Python virtual environment with these
 commands:
 
 ```console
-cd skeleton-generic
-pyenv virtualenv <python_version_to_use> skeleton-generic
-pyenv local skeleton-generic
+cd skeleton-python-library
+pyenv virtualenv <python_version_to_use> skeleton-python-library
+pyenv local skeleton-python-library
 pip install --requirement requirements-dev.txt
 ```
 
@@ -162,6 +162,17 @@ pre-commit install
 At this point the pre-commit checks will run against any files that
 you attempt to commit.  If you want to run the checks against the
 entire repo, just execute `pre-commit run --all-files`.
+
+### Running unit and system tests ###
+
+In addition to the pre-commit checks the CI system will run the suite
+of unit and system tests that are included with this project.  To run
+these tests locally execute `pytest` from the root of the project.
+
+We encourage any updates to these tests to improve the overall code
+coverage.  If your pull request adds new functionality we would
+appreciate it if you extend existing test cases, or add new ones to
+exercise the newly added code.
 
 ## Public domain ##
 
