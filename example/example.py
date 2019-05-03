@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-"""example is an example Python library and tool
+"""example is an example Python library and tool.
 
 Usage:
   example [--log-level=LEVEL]
@@ -20,7 +20,7 @@ import docopt
 
 
 def example():
-    """A dummy function."""
+    """Demonstrate an example function."""
     logging.debug("This is a debug message")
     logging.info("This is an info message")
     logging.warning("This is a warning message")
@@ -29,6 +29,7 @@ def example():
 
 
 def main():
+    """Handle startup, processing, and shutdown."""
     args = docopt.docopt(__doc__, version="0.0.1")
 
     # Set up logging

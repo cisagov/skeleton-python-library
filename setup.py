@@ -1,5 +1,5 @@
 """
-setup module for example
+setup module for example.
 
 Based on:
 
@@ -11,6 +11,7 @@ from setuptools import setup
 
 
 def readme():
+    """Process and return the readme file."""
     with open("README.md") as f:
         return f.read()
 
