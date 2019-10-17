@@ -131,7 +131,8 @@ jobs:
             ${{ env.BASE_CACHE_KEY }}${{ hashFiles(
             '**/requirements-test.txt',
             '**/requirements.txt',
-            '**/.pre-commit-config.yaml') }}
+            '**/.pre-commit-config.yaml',
+            'pyproject.toml') }}
           # Note that the .terraform directory IS NOT included in the
           # cache because if we were caching, then we would need to use
           # the `-upgrade=true` option. This option blindly pulls down the
@@ -184,6 +185,304 @@ jobs:
         run: pre-commit install-hooks
       - name: Run pre-commit on all files
         run: pre-commit run --all-files
+      - name: Setup tmate debug session
+        uses: mxschmitt/action-tmate@v3
+        if: env.RUN_TMATE
+  test-source:
+    name: test source - py${{ matrix.python-version }} - ${{ matrix.platform }}
+    needs:
+      - diagnostics
+    permissions:
+      # actions/checkout needs this to fetch code
+      contents: read
+    runs-on: ${{ matrix.platform }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # We test on all of the latest platforms available to use with GitHub-
+        # hosted runners for public repositories.
+        platform:
+          - macos-latest
+          - ubuntu-24.04-arm
+          - ubuntu-latest
+          - windows-latest
+        python-version:
+          - "3.10"
+          - "3.11"
+          - "3.12"
+          - "3.13"
+          - "3.14"
+    steps:
+      - name: Apply standard cisagov job preamble
+        uses: cisagov/action-job-preamble@v1
+        with:
+          # This functionality is poorly implemented and has been
+          # causing problems due to the MITM implementation hogging or
+          # leaking memory.  As a result we disable it by default.  If
+          # you want to temporarily enable it, simply set
+          # monitor_permissions equal to "true".
+          #
+          # TODO: Re-enable this functionality when practical.  See
+          # cisagov/skeleton-python-library#149 for more details.
+          monitor_permissions: "false"
+          # Use a variable to specify the permissions monitoring
+          # configuration. By default this will yield the
+          # configuration stored in the cisagov organization-level
+          # variable, but if you want to use a different configuration
+          # then simply:
+          # 1. Create a repository-level variable with the name
+          # ACTIONS_PERMISSIONS_CONFIG.
+          # 2. Set this new variable's value to the configuration you
+          # want to use for this repository.
+          #
+          # Note in particular that changing the permissions
+          # monitoring configuration *does not* require you to modify
+          # this workflow.
+          permissions_monitoring_config: ${{ vars.ACTIONS_PERMISSIONS_CONFIG }}
+      - uses: actions/checkout@v7
+      - id: setup-python
+        uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+      - uses: actions/cache@v6
+        env:
+          BASE_CACHE_KEY: >-
+            ${{ github.job }}-${{
+            runner.os }}-${{ runner.arch }}-py${{
+            steps.setup-python.outputs.python-version }}-
+        with:
+          path: ${{ env.PIP_CACHE_DIR }}
+          key: >-
+            ${{ env.BASE_CACHE_KEY }}${{ hashFiles(
+            '**/requirements-test.txt',
+            '**/requirements.txt',
+            'pyproject.toml') }}
+          restore-keys: |
+            ${{ env.BASE_CACHE_KEY }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install --upgrade --requirement requirements-test.txt
+      - name: Run tests
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: pytest
+      - name: Upload coverage report
+        uses: coverallsapp/github-action@v2
+        with:
+          flag-name: py${{ matrix.python-version }} - ${{ matrix.platform }}
+          parallel: true
+        if: success()
+      - name: Setup tmate debug session
+        uses: mxschmitt/action-tmate@v3
+        if: env.RUN_TMATE
+  coveralls-finish:
+    permissions:
+      # actions/checkout needs this to fetch code
+      contents: read
+    runs-on: ubuntu-latest
+    needs:
+      - diagnostics
+      - test-source
+    steps:
+      - name: Apply standard cisagov job preamble
+        uses: cisagov/action-job-preamble@v1
+        with:
+          # This functionality is poorly implemented and has been
+          # causing problems due to the MITM implementation hogging or
+          # leaking memory.  As a result we disable it by default.  If
+          # you want to temporarily enable it, simply set
+          # monitor_permissions equal to "true".
+          #
+          # TODO: Re-enable this functionality when practical.  See
+          # cisagov/skeleton-python-library#149 for more details.
+          monitor_permissions: "false"
+          # Use a variable to specify the permissions monitoring
+          # configuration. By default this will yield the
+          # configuration stored in the cisagov organization-level
+          # variable, but if you want to use a different configuration
+          # then simply:
+          # 1. Create a repository-level variable with the name
+          # ACTIONS_PERMISSIONS_CONFIG.
+          # 2. Set this new variable's value to the configuration you
+          # want to use for this repository.
+          #
+          # Note in particular that changing the permissions
+          # monitoring configuration *does not* require you to modify
+          # this workflow.
+          permissions_monitoring_config: ${{ vars.ACTIONS_PERMISSIONS_CONFIG }}
+      - uses: actions/checkout@v7
+      - name: Finished coveralls reports
+        uses: coverallsapp/github-action@v2
+        with:
+          parallel-finished: true
+      - name: Setup tmate debug session
+        uses: mxschmitt/action-tmate@v3
+        if: env.RUN_TMATE
+  build-wheel:
+    name: build wheel - py${{ matrix.python-version }}
+    needs:
+      - diagnostics
+    permissions:
+      # actions/checkout needs this to fetch code
+      contents: read
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version:
+          - "3.10"
+          - "3.11"
+          - "3.12"
+          - "3.13"
+          - "3.14"
+    steps:
+      - name: Apply standard cisagov job preamble
+        uses: cisagov/action-job-preamble@v1
+        with:
+          # This functionality is poorly implemented and has been
+          # causing problems due to the MITM implementation hogging or
+          # leaking memory.  As a result we disable it by default.  If
+          # you want to temporarily enable it, simply set
+          # monitor_permissions equal to "true".
+          #
+          # TODO: Re-enable this functionality when practical.  See
+          # cisagov/skeleton-python-library#149 for more details.
+          monitor_permissions: "false"
+          # Use a variable to specify the permissions monitoring
+          # configuration. By default this will yield the
+          # configuration stored in the cisagov organization-level
+          # variable, but if you want to use a different configuration
+          # then simply:
+          # 1. Create a repository-level variable with the name
+          # ACTIONS_PERMISSIONS_CONFIG.
+          # 2. Set this new variable's value to the configuration you
+          # want to use for this repository.
+          #
+          # Note in particular that changing the permissions
+          # monitoring configuration *does not* require you to modify
+          # this workflow.
+          permissions_monitoring_config: ${{ vars.ACTIONS_PERMISSIONS_CONFIG }}
+      - uses: actions/checkout@v7
+      - id: setup-python
+        uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+      - uses: actions/cache@v6
+        env:
+          BASE_CACHE_KEY: >-
+            ${{ github.job }}-${{ runner.os }}-py${{
+            steps.setup-python.outputs.python-version }}-
+        with:
+          path: ${{ env.PIP_CACHE_DIR }}
+          key: >-
+            ${{ env.BASE_CACHE_KEY }}${{ hashFiles(
+            '**/requirements.txt',
+            'pyproject.toml') }}
+          restore-keys: |
+            ${{ env.BASE_CACHE_KEY }}
+      - name: Install build dependencies
+        run: |
+          python -m pip install --upgrade pip setuptools
+          python -m pip install --upgrade build
+      - name: Build artifacts
+        run: python -m build
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: dist-${{ matrix.python-version }}
+          path: dist
+      - name: Setup tmate debug session
+        uses: mxschmitt/action-tmate@v3
+        if: env.RUN_TMATE
+  test-wheel:
+    name: test built wheel - py${{ matrix.python-version }} - ${{ matrix.platform }}
+    needs:
+      - diagnostics
+      - build-wheel
+      - test-source
+    permissions:
+      # actions/checkout needs this to fetch code
+      contents: read
+    runs-on: ${{ matrix.platform }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # We test on all of the latest platforms available to use with GitHub-
+        # hosted runners for public repositories.
+        platform:
+          - macos-latest
+          - ubuntu-24.04-arm
+          - ubuntu-latest
+          - windows-latest
+        python-version:
+          - "3.10"
+          - "3.11"
+          - "3.12"
+          - "3.13"
+          - "3.14"
+    steps:
+      - name: Apply standard cisagov job preamble
+        uses: cisagov/action-job-preamble@v1
+        with:
+          # This functionality is poorly implemented and has been
+          # causing problems due to the MITM implementation hogging or
+          # leaking memory.  As a result we disable it by default.  If
+          # you want to temporarily enable it, simply set
+          # monitor_permissions equal to "true".
+          #
+          # TODO: Re-enable this functionality when practical.  See
+          # cisagov/skeleton-python-library#149 for more details.
+          monitor_permissions: "false"
+          # Use a variable to specify the permissions monitoring
+          # configuration. By default this will yield the
+          # configuration stored in the cisagov organization-level
+          # variable, but if you want to use a different configuration
+          # then simply:
+          # 1. Create a repository-level variable with the name
+          # ACTIONS_PERMISSIONS_CONFIG.
+          # 2. Set this new variable's value to the configuration you
+          # want to use for this repository.
+          #
+          # Note in particular that changing the permissions
+          # monitoring configuration *does not* require you to modify
+          # this workflow.
+          permissions_monitoring_config: ${{ vars.ACTIONS_PERMISSIONS_CONFIG }}
+      - uses: actions/checkout@v7
+      - id: setup-python
+        uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+      - uses: actions/cache@v6
+        env:
+          BASE_CACHE_KEY: >-
+            ${{ github.job }}-${{
+            runner.os }}-${{ runner.arch }}-py${{
+            steps.setup-python.outputs.python-version }}-
+        with:
+          path: ${{ env.PIP_CACHE_DIR }}
+          key: >-
+            ${{ env.BASE_CACHE_KEY }}${{ hashFiles(
+            '**/requirements.txt',
+            'pyproject.toml') }}
+          restore-keys: |
+            ${{ env.BASE_CACHE_KEY }}
+      - name: Retrieve the built wheel
+        uses: actions/download-artifact@v8
+        with:
+          name: dist-${{ matrix.python-version }}
+          path: dist
+      - id: find-wheel
+        name: Get the name of the retrieved wheel (there should only be one)
+        run: echo "wheel=$(ls dist/*whl)" >> $GITHUB_OUTPUT
+      - name: Update core Python packages
+        run: python -m pip install --upgrade pip setuptools
+      - name: Install the built wheel (along with testing dependencies)
+        run: python -m pip install ${{ steps.find-wheel.outputs.wheel }}[test]
+      - name: Run tests
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: pytest
       - name: Setup tmate debug session
         uses: mxschmitt/action-tmate@v3
         if: env.RUN_TMATE
