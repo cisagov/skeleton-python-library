@@ -1,14 +1,15 @@
 #!/usr/bin/env pytest -vs
 """Tests for example."""
 
+# standard python libraries
 import logging
 import os
 import sys
 from unittest.mock import patch
 
-import pytest
-
+# third-party libraries
 import example
+import pytest
 
 div_params = [
     (1, 1, 1),
