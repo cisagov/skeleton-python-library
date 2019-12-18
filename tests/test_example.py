@@ -8,8 +8,10 @@ import sys
 from unittest.mock import patch
 
 # third-party libraries
-import example
 import pytest
+
+# cisagov libraries
+import example
 
 div_params = [
     (1, 1, 1),
