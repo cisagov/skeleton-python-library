@@ -1,2 +1,4 @@
+# Note: Add any additional testing requirements to setup.py's
+# extras_require["test"] field
 --editable .[test]
 --requirement requirements.txt
