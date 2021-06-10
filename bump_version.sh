@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# bump_version.sh (show|major|minor|patch|prerelease|build)
+# bump_version.sh (show|major|minor|patch|prerelease|build|finalize)
 
 set -o nounset
 set -o errexit
