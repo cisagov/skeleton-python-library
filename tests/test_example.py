@@ -1,4 +1,3 @@
-#!/usr/bin/env pytest -vs
 """Tests for example."""
 
 # Standard Python Libraries
@@ -88,6 +87,10 @@ def test_log_levels(level):
             assert (
                 logging.root.hasHandlers() is True
             ), "root logger should now have a handler"
+            assert (
+                logging.getLevelName(logging.root.getEffectiveLevel()) == level.upper()
+            ), f"root logger level should be set to {level.upper()}"
+            assert return_code is None, "main() should return success"
 
 
 def test_bad_log_level():
