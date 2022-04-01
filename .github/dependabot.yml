@@ -7,21 +7,29 @@
 
 updates:
   - directory: /
-    # ignore:
-    #   # Managed by cisagov/skeleton-generic
-    #   - dependency-name: actions/cache
-    #   - dependency-name: actions/checkout
-    #   - dependency-name: actions/dependency-review-action
-    #   - dependency-name: actions/labeler
-    #   - dependency-name: actions/setup-go
-    #   - dependency-name: actions/setup-python
-    #   - dependency-name: cisagov/action-job-preamble
-    #   - dependency-name: cisagov/setup-env-github-action
-    #   - dependency-name: crazy-max/ghaction-github-labeler
-    #   - dependency-name: github/codeql-action
-    #   - dependency-name: hashicorp/setup-packer
-    #   - dependency-name: hashicorp/setup-terraform
-    #   - dependency-name: mxschmitt/action-tmate
+    groups:
+      upload-download-artifact:
+        patterns:
+          - actions/download-artifact
+          - actions/upload-artifact
+    ignore:
+      # Managed by cisagov/skeleton-generic
+      - dependency-name: actions/cache
+      - dependency-name: actions/checkout
+      - dependency-name: actions/dependency-review-action
+      - dependency-name: actions/labeler
+      - dependency-name: actions/setup-go
+      - dependency-name: actions/setup-python
+      - dependency-name: cisagov/action-job-preamble
+      - dependency-name: cisagov/setup-env-github-action
+      - dependency-name: crazy-max/ghaction-github-labeler
+      - dependency-name: github/codeql-action
+      - dependency-name: hashicorp/setup-packer
+      - dependency-name: hashicorp/setup-terraform
+      - dependency-name: mxschmitt/action-tmate
+      # # Managed by cisagov/skeleton-python-library
+      # - dependency-name: actions/download-artifact
+      # - dependency-name: actions/upload-artifact
     labels:
       # dependabot default we need to replicate
       - dependencies
@@ -34,10 +42,17 @@ updates:
 
   - directory: /
     # ignore:
-    #   # Managed by cisagov/skeleton-generic
+    #   # Managed by cisagov/skeleton-python-library
+    #   - dependency-name: build
+    #   - dependency-name: coverage
+    #   - dependency-name: coveralls
+    #   - dependency-name: mypy
     #   - dependency-name: pre-commit
+    #   - dependency-name: pytest-cov
+    #   - dependency-name: pytest
     #   - dependency-name: semver
     #   - dependency-name: setuptools
+    #   - dependency-name: twine
     package-ecosystem: pip
     schedule:
       interval: weekly
