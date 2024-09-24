@@ -251,7 +251,7 @@ for req_file in "requirements-dev.txt" "requirements-test.txt" "requirements.txt
 done
 
 # Install all necessary mypy type stubs
-mypy --install-types src/
+mypy --install-types --non-interactive src/
 
 # Install git pre-commit hooks now or later.
 pre-commit install ${INSTALL_HOOKS:+"--install-hooks"}
