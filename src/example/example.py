@@ -28,7 +28,10 @@ from typing import Any, Dict
 # Third-Party Libraries
 import docopt
 import pkg_resources
-from schema import And, Schema, SchemaError, Use
+
+# There are no type stubs for the schema library, so mypy requires the type:
+# ignore hint.
+from schema import And, Schema, SchemaError, Use  # type: ignore
 
 from ._version import __version__
 
