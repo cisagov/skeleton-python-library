@@ -93,6 +93,16 @@ setup(
     include_package_data=True,
     install_requires=["docopt", "schema", "setuptools >= 24.2.0"],
     extras_require={
+        # IMPORTANT: Keep type hinting-related dependencies of the dev section
+        # in sync with the mypy pre-commit hook configuration (see
+        # .pre-commit-config.yaml). Any changes to type hinting-related
+        # dependencies here should be reflected in the additional_dependencies
+        # field of the mypy pre-commit hook to avoid discrepancies in type
+        # checking between environments.
+        "dev": [
+            "types-docopt",
+            "types-setuptools",
+        ],
         "test": [
             "coverage",
             # coveralls 1.11.0 added a service number for calls from
@@ -105,7 +115,7 @@ setup(
             "pre-commit",
             "pytest-cov",
             "pytest",
-        ]
+        ],
     },
     # Conveniently allows one to run the CLI tool as `example`
     entry_points={"console_scripts": ["example = example.example:main"]},
