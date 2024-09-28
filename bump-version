@@ -8,9 +8,9 @@ set -o errexit
 set -o pipefail
 
 # Stores the canonical version for the project.
-VERSION_FILE=config/version.txt
+VERSION_FILE=src/example/_version.py
 # Files that should be updated with the new version.
-VERSION_FILES=("$VERSION_FILE" README.md)
+VERSION_FILES=("$VERSION_FILE")
 
 USAGE=$(
   cat << END_OF_LINE
@@ -29,7 +29,7 @@ Options:
 END_OF_LINE
 )
 
-old_version=$(< "$VERSION_FILE")
+old_version=$(sed -n "s/^__version__ = \"\(.*\)\"$/\1/p" $VERSION_FILE)
 # Comment out periods so they are interpreted as periods and don't
 # just match any character
 old_version_regex=${old_version//\./\\\.}
