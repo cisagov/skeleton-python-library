@@ -250,9 +250,6 @@ for req_file in "requirements-dev.txt" "requirements-test.txt" "requirements.txt
   fi
 done
 
-# Install all necessary mypy type stubs
-mypy --install-types --non-interactive src/
-
 # Install git pre-commit hooks now or later.
 pre-commit install ${INSTALL_HOOKS:+"--install-hooks"}
 
@@ -284,6 +281,9 @@ else:
     print(f'Unsupported lineage version: {lineage["version"]}', file=sys.stderr)
 END_OF_LINE
 )"
+
+# Install all necessary mypy type stubs
+mypy --install-types --non-interactive src/
 
 # Qapla'
 echo "Success!"
