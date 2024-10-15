@@ -82,7 +82,7 @@ setup(
         "Programming Language :: Python :: 3.12",
         "Programming Language :: Python :: Implementation :: CPython",
     ],
-    python_requires=">=3.7",
+    python_requires=">=3.8",
     # What does your project relate to?
     keywords="skeleton",
     packages=find_packages(where="src"),
