@@ -18,6 +18,7 @@ dependencies:
           # Add any dependency files used.
           - .pre-commit-config.yaml
           - requirements*.txt
+          - pyproject.toml
 docker:
   - changed-files:
       - any-glob-to-any-file:
@@ -61,10 +62,10 @@ test:
       - any-glob-to-any-file:
           # Add any test-related files or paths.
           - .ansible-lint
-          - .flake8
-          - .isort.cfg
           - .mdl_config.yaml
           - .yamllint
+          - pyproject.toml
+          - tests/**
 typescript:
   - changed-files:
       - any-glob-to-any-file:
@@ -77,4 +78,4 @@ version bump:
   - changed-files:
       - any-glob-to-any-file:
           # Ensure this matches your version tracking file(s).
-          - version.txt
+          - src/**/_version.py
