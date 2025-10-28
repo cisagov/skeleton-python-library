@@ -72,3 +72,9 @@ Tracker = "https://github.com/cisagov/skeleton-python-library/issues"
 
 [tool.hatch.version]
 path = "src/example/_version.py"
+
+[tool.pytest.ini_options]
+# Increase verbosity, display extra test summary info for tests that
+# did not pass, display code coverage results, and enable debug
+# logging.
+addopts = "--verbose -ra --cov --log-cli-level=DEBUG"
