@@ -9,6 +9,7 @@ requires = ["hatchling"]
 authors = [
     { name = "Cybersecurity and Infrastructure Security Agency", email = "github@cisa.dhs.gov" }
 ]
+# See https://pypi.python.org/pypi?%3Aaction=list_classifiers
 classifiers = [
     # How mature is this project? Common values are
     #   3 - Alpha
@@ -66,11 +67,13 @@ test = [
 example = "example.example:main"
 
 [project.urls]
+# Landing page for CISA's cybersecurity mission
 Mission = "https://www.cisa.gov/cybersecurity"
 Source = "https://github.com/cisagov/skeleton-python-library"
 Tracker = "https://github.com/cisagov/skeleton-python-library/issues"
 
 [tool.hatch.version]
+# Versions should comply with PEP440
 path = "src/example/_version.py"
 
 [tool.pytest.ini_options]
