@@ -1,0 +1,74 @@
+# For more information about configuring project metadata for the
+# hatch build backend, please see
+# https://hatch.pypa.io/latest/config/metadata/
+[build-system]
+build-backend = "hatchling.build"
+requires = ["hatchling"]
+
+[project]
+authors = [
+    { name = "Cybersecurity and Infrastructure Security Agency", email = "github@cisa.dhs.gov" }
+]
+classifiers = [
+    # How mature is this project? Common values are
+    #   3 - Alpha
+    #   4 - Beta
+    #   5 - Production/Stable
+    "Development Status :: 3 - Alpha",
+    # Indicate who your project is intended for
+    "Intended Audience :: Developers",
+    # Pick your license as you wish (should match "license" above)
+    "License :: CC0 1.0 Universal (CC0 1.0) Public Domain Dedication",
+    # Specify the Python versions you support here. In particular, ensure
+    # that you indicate whether you support Python 2, Python 3 or both.
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: Implementation :: CPython",
+]
+dependencies = [
+    "docopt",
+    "schema",
+]
+description = "Example Python library"
+dynamic = ["version"]
+keywords = ["skeleton"]
+license = "	CC-BY-1.0"
+name = "example"
+readme = "README.md"
+requires-python = ">=3.9"
+
+[project.optional-dependencies]
+# IMPORTANT: Keep type hinting-related dependencies of the dev section
+# in sync with the mypy pre-commit hook configuration (see
+# .pre-commit-config.yaml). Any changes to type hinting-related
+# dependencies here should be reflected in the additional_dependencies
+# field of the mypy pre-commit hook to avoid discrepancies in type
+# checking between environments.
+dev = [
+    "types-docopt",
+    "types-setuptools",
+]
+test = [
+    "coverage",
+    "coveralls",
+    "pre-commit",
+    "pytest-cov",
+    "pytest",
+]
+
+[project.scripts]
+example = "example.example:main"
+
+[project.urls]
+Mission = "https://www.cisa.gov/cybersecurity"
+Source = "https://github.com/cisagov/skeleton-python-library"
+Tracker = "https://github.com/cisagov/skeleton-python-library/issues"
+
+[tool.hatch.version]
+path = "src/example/_version.py"
