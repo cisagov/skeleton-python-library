@@ -6,7 +6,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/cisagov/skeleton-python-library/badge.svg?branch=develop)](https://coveralls.io/github/cisagov/skeleton-python-library?branch=develop)
 [![Code Style](https://img.shields.io/badge/Code%20Style-black-black)](https://github.com/psf/black)
 
-[![Code Style](https://img.shields.io/badge/Code%20Style-Black-black
+[![Code Style](https://img.shields.io/badge/Code%20Style-black-black
 )](https://github.com/psf/black)
 
 This is a generic skeleton project that can be used to quickly get a
