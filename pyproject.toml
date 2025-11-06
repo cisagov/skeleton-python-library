@@ -42,7 +42,7 @@ dependencies = [
 description = "Example Python library"
 dynamic = ["version"]
 keywords = ["skeleton"]
-license = "	CC-BY-1.0"
+license = "CC0-1.0"
 name = "example"
 readme = "README.md"
 requires-python = ">=3.9"
