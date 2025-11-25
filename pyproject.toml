@@ -51,6 +51,8 @@ requires-python = ">=3.10"
 # field of the mypy pre-commit hook to avoid discrepancies in type
 # checking between environments.
 dev = [
+    "build",
+    "twine",
     "types-docopt",
 ]
 test = [
