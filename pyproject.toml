@@ -3,7 +3,13 @@
 # https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html
 [build-system]
 build-backend = "setuptools.build_meta"
-requires = ["setuptools"]
+requires = [
+    # 61.0 was the first version of setuptools to offer a full-fledged
+    # backend that uses pyproject.toml for metadata configuration (in
+    # compliance with PEP 621):
+    # https://setuptools.pypa.io/en/stable/history.html#v61-0-0
+    "setuptools>=61.0"
+]
 
 [project]
 authors = [
