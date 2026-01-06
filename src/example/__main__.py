@@ -1,5 +1,5 @@
 """Code to run if this package is used as a Python module."""
 
-from .example import main
+from .example import app
 
-main()
+app(prog_name="example")

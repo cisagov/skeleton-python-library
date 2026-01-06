@@ -43,8 +43,8 @@ classifiers = [
     "Programming Language :: Python :: Implementation :: CPython",
 ]
 dependencies = [
-    "docopt",
-    "schema",
+    "rich>=14.2.0",
+    "typer>=0.21.1",
 ]
 description = "Example Python library"
 dynamic = ["readme", "version"]

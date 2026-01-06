@@ -7,35 +7,25 @@ EXIT STATUS
     This utility exits with one of the following values:
     0   Calculation completed successfully.
     >0  An error occurred.
-
-Usage:
-  example [--log-level=LEVEL] <dividend> <divisor>
-  example (-h | --help)
-
-Options:
-  -h --help              Show this message.
-  --log-level=LEVEL      If specified, then the log level will be set to
-                         the specified value.  Valid values are "debug", "info",
-                         "warning", "error", and "critical". [default: info]
 """
 
 # Standard Python Libraries
 from importlib.resources import files
 import logging
 import os
-import sys
-from typing import Any
+from typing import Annotated
 
 # Third-Party Libraries
-import docopt
-
-# There are no type stubs for the schema library, so mypy requires the type:
-# ignore hint.
-from schema import And, Schema, SchemaError, Use  # type: ignore
+from rich import print
+from rich.logging import RichHandler
+import typer
 
 from ._version import __version__
 
 DEFAULT_ECHO_MESSAGE: str = "Hello World from the example default!"
+LOG_LEVELS: list[str] = [*logging.getLevelNamesMapping()]
+
+app = typer.Typer()
 
 
 def example_div(dividend: int, divisor: int) -> float:
@@ -48,44 +38,61 @@ def example_div(dividend: int, divisor: int) -> float:
     return dividend / divisor
 
 
-def main() -> None:
-    """Set up logging and call the example function."""
-    args: dict[str, str] = docopt.docopt(__doc__, version=__version__)
-    # Validate and convert arguments as needed
-    schema: Schema = Schema(
-        {
-            "--log-level": And(
-                str,
-                Use(str.lower),
-                lambda n: n in ("debug", "info", "warning", "error", "critical"),
-                error="Possible values for --log-level are "
-                + "debug, info, warning, error, and critical.",
-            ),
-            "<dividend>": Use(int, error="<dividend> must be an integer."),
-            "<divisor>": And(
-                Use(int),
-                lambda n: n != 0,
-                error="<divisor> must be an integer that is not 0.",
-            ),
-            str: object,  # Don't care about other keys, if any
-        }
-    )
+def divisor_callback(value: int) -> int:
+    """Verify that the divisor is not zero."""
+    if value == 0:
+        raise typer.BadParameter("divisor must not be zero")
+    return value
 
-    try:
-        validated_args: dict[str, Any] = schema.validate(args)
-    except SchemaError as err:
-        # Exit because one or more of the arguments were invalid
-        print(err, file=sys.stderr)
-        sys.exit(1)
 
-    # Assign validated arguments to variables
-    dividend: int = validated_args["<dividend>"]
-    divisor: int = validated_args["<divisor>"]
-    log_level: str = validated_args["--log-level"]
+def log_level_callback(value: str) -> str:
+    """Verify that the value is a valid logging level name."""
+    if value.upper() not in LOG_LEVELS:
+        raise typer.BadParameter(
+            f"log_level must one of the following:  {', '.join(LOG_LEVELS)}"
+        )
+    return value
 
+
+def version_callback(ctx: typer.Context, value: bool) -> None:
+    """If value is True then print the version and exit early."""
+    # Doing this doesn't break shell completion when you print text to
+    # the screen from a callback.  For more information see:
+    # https://typer.tiangolo.com/tutorial/options/callback-and-context/#fix-completion-using-the-context
+    if ctx.resilient_parsing:
+        return
+
+    if value:
+        print(__version__)
+        raise typer.Exit()
+
+
+@app.command()
+def example(
+    dividend: Annotated[int, typer.Argument(help="The dividend")],
+    divisor: Annotated[
+        int, typer.Argument(callback=divisor_callback, help="The nonzero divisor")
+    ],
+    log_level: Annotated[
+        str,
+        typer.Option(
+            callback=log_level_callback,
+            help=f"The logging level.  Valid values are:  {', '.join(LOG_LEVELS)}.",
+        ),
+    ] = "info",
+    version: Annotated[
+        bool | None,
+        typer.Option(
+            "--version", callback=version_callback, help="Show version", is_eager=True
+        ),
+    ] = None,
+) -> None:
+    """Set up logging and call the division function."""
     # Set up logging
     logging.basicConfig(
-        format="%(asctime)-15s %(levelname)s %(message)s", level=log_level.upper()
+        format="%(asctime)-15s %(levelname)s %(message)s",
+        level=log_level.upper(),
+        handlers=[RichHandler(rich_tracebacks=True)],
     )
 
     logging.info("%d / %d == %f", dividend, divisor, example_div(dividend, divisor))
@@ -102,3 +109,8 @@ def main() -> None:
 
     # Stop logging and clean up
     logging.shutdown()
+
+
+def main() -> None:
+    """Run the CLI."""
+    app()
