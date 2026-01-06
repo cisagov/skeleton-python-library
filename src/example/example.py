@@ -25,7 +25,7 @@ from ._version import __version__
 DEFAULT_ECHO_MESSAGE: str = "Hello World from the example default!"
 LOG_LEVELS: list[str] = [*logging.getLevelNamesMapping()]
 
-app = typer.Typer()
+app = typer.Typer(context_settings={"help_option_names": ["-h", "--help"]})
 
 
 def example_div(dividend: int, divisor: int) -> float:
