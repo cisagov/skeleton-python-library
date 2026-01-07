@@ -13,6 +13,7 @@ EXIT STATUS
 from importlib.resources import files
 import logging
 import os
+import sys
 from typing import Annotated
 
 # Third-Party Libraries
@@ -23,7 +24,15 @@ import typer
 from ._version import __version__
 
 DEFAULT_ECHO_MESSAGE: str = "Hello World from the example default!"
-LOG_LEVELS: list[str] = [*logging.getLevelNamesMapping()]
+LOG_LEVELS: list[str] = list()
+if sys.version_info.minor > 10:
+    LOG_LEVELS = [*logging.getLevelNamesMapping()]
+else:
+    LOG_LEVELS = [
+        logging.getLevelName(x)
+        for x in range(0, 101)
+        if not logging.getLevelName(x).startswith("Level")
+    ]
 
 app = typer.Typer(context_settings={"help_option_names": ["-h", "--help"]})
 
