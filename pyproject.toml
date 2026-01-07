@@ -73,7 +73,7 @@ test = [
 ]
 
 [project.scripts]
-example = "example.example:main"
+example = "example.example:setup_logging_and_divide"
 
 [project.urls]
 homepage = "https://github.com/cisagov/skeleton-python-library"

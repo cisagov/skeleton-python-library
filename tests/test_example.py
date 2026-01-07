@@ -36,7 +36,7 @@ PROJECT_VERSION = example.__version__
 def test_stdout_version(capsys):
     """Verify that version string sent to stdout agrees with the module version."""
     runner = CliRunner()
-    result = runner.invoke(example.example.example, ["--version"])
+    result = runner.invoke(example.setup_logging_and_divide, ["--version"])
     assert result.exit_code == 0, "should exit cleanly"
     assert result.output.endswith(
         f"{PROJECT_VERSION}\n"
@@ -79,7 +79,7 @@ def test_log_levels(level):
             logging.root.hasHandlers() is False
         ), "root logger should not have handlers yet"
         result = runner.invoke(
-            example.example.example, [f"--log-level={level}", "1", "1"]
+            example.setup_logging_and_divide, [f"--log-level={level}", "1", "1"]
         )
         assert result.exit_code == 0, "should exit cleanly"
         assert (
@@ -93,14 +93,16 @@ def test_log_levels(level):
 def test_bad_log_level():
     """Validate bad log-level argument returns error."""
     runner = CliRunner()
-    result = runner.invoke(example.example.example, ["--log-level=emergency", "1", "1"])
+    result = runner.invoke(
+        example.setup_logging_and_divide, ["--log-level=emergency", "1", "1"]
+    )
     assert result.exit_code == 2, "should exit with return code 2"
 
 
 @pytest.mark.parametrize("dividend, divisor, quotient", div_params)
 def test_division(dividend, divisor, quotient):
     """Verify division results."""
-    result = example.example_div(dividend, divisor)
+    result = example.divide(dividend, divisor)
     assert result == quotient, "result should equal quotient"
 
 
@@ -114,7 +116,7 @@ def test_slow_division():
     # Standard Python Libraries
     import time
 
-    result = example.example_div(256, 16)
+    result = example.divide(256, 16)
     time.sleep(4)
     assert result == 16, "result should equal be 16"
 
@@ -122,11 +124,11 @@ def test_slow_division():
 def test_zero_division():
     """Verify that division by zero throws the correct exception."""
     with pytest.raises(ZeroDivisionError):
-        example.example_div(1, 0)
+        example.divide(1, 0)
 
 
 def test_zero_divisor_argument():
     """Verify that a divisor of zero is handled as expected."""
     runner = CliRunner()
-    result = runner.invoke(example.example.example, ["1", "0"])
+    result = runner.invoke(example.setup_logging_and_divide, ["1", "0"])
     assert result.exit_code == 2, "should exit with return code 2"

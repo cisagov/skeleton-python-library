@@ -37,7 +37,7 @@ else:
 CONTEXT_SETTINGS: MutableMapping[str, Any] = dict(help_option_names=["-h", "--help"])
 
 
-def example_div(dividend: int, divisor: int) -> float:
+def divide(dividend: int, divisor: int) -> float:
     """Print some logging messages."""
     logging.debug("This is a debug message")
     logging.info("This is an info message")
@@ -66,7 +66,7 @@ def divisor_callback(ctx: click.Context, param: click.Parameter, value: int):
     type=click.Choice(LOG_LEVELS, case_sensitive=False),
 )
 @click.version_option(version=__version__)
-def example(
+def setup_logging_and_divide(
     dividend: int,
     divisor: int,
     log_level: str = "info",
@@ -83,7 +83,7 @@ def example(
         handlers=[RichHandler(rich_tracebacks=True)],
     )
 
-    logging.info("%d / %d == %f", dividend, divisor, example_div(dividend, divisor))
+    logging.info("%d / %d == %f", dividend, divisor, divide(dividend, divisor))
 
     # Access some data from an environment variable
     message: str = os.getenv("ECHO_MESSAGE", DEFAULT_ECHO_MESSAGE)
@@ -101,4 +101,4 @@ def example(
 
 def main() -> None:
     """Run the CLI."""
-    example()
+    setup_logging_and_divide()
