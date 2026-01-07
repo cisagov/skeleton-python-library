@@ -10,10 +10,12 @@ EXIT STATUS
 """
 
 # Standard Python Libraries
+from collections.abc import MutableMapping
 from importlib.resources import files
 import logging
 import os
 import sys
+from typing import Any
 
 # Third-Party Libraries
 import click
@@ -31,7 +33,8 @@ else:
         for x in range(0, 101)
         if not logging.getLevelName(x).startswith("Level")
     ]
-CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
+# Context settings for click
+CONTEXT_SETTINGS: MutableMapping[str, Any] = dict(help_option_names=["-h", "--help"])
 
 
 def example_div(dividend: int, divisor: int) -> float:
