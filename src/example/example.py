@@ -28,6 +28,8 @@ LOG_LEVELS: list[str] = list()
 if sys.version_info.minor > 10:
     LOG_LEVELS = [*logging.getLevelNamesMapping()]
 else:
+    # The logging.getLevelNamesMapping method was only introduced in
+    # Python 3.11.
     LOG_LEVELS = [
         logging.getLevelName(x)
         for x in range(0, 101)
