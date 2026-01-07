@@ -7,6 +7,7 @@ import sys
 from unittest.mock import patch
 
 # Third-Party Libraries
+from click.testing import CliRunner
 import pytest
 
 # cisagov Libraries
@@ -34,11 +35,10 @@ PROJECT_VERSION = example.__version__
 
 def test_stdout_version(capsys):
     """Verify that version string sent to stdout agrees with the module version."""
-    with pytest.raises(SystemExit):
-        with patch.object(sys, "argv", ["bogus", "--version"]):
-            example.example.main()
-    captured = capsys.readouterr()
-    assert captured.out.endswith(
+    runner = CliRunner()
+    result = runner.invoke(example.example.example, ["--version"])
+    assert result.exit_code == 0, "should exit cleanly"
+    assert result.output.endswith(
         f"{PROJECT_VERSION}\n"
     ), "standard output by '--version' should agree with module.__version__"
 
@@ -73,35 +73,28 @@ def test_release_version():
 @pytest.mark.parametrize("level", log_levels)
 def test_log_levels(level):
     """Validate commandline log-level arguments."""
-    with patch.object(sys, "argv", ["bogus", f"--log-level={level}", "1", "1"]):
-        with patch.object(logging.root, "handlers", []):
-            assert (
-                logging.root.hasHandlers() is False
-            ), "root logger should not have handlers yet"
-            return_code = None
-            try:
-                example.example.main()
-            except SystemExit as sys_exit:
-                return_code = sys_exit.code
-            assert return_code == 0, "main() should return success"
-            assert (
-                logging.root.hasHandlers() is True
-            ), "root logger should now have a handler"
-            assert (
-                logging.getLevelName(logging.root.getEffectiveLevel()) == level.upper()
-            ), f"root logger level should be set to {level.upper()}"
-            assert return_code == 0, "main() should return success"
+    runner = CliRunner()
+    with patch.object(logging.root, "handlers", []):
+        assert (
+            logging.root.hasHandlers() is False
+        ), "root logger should not have handlers yet"
+        result = runner.invoke(
+            example.example.example, [f"--log-level={level}", "1", "1"]
+        )
+        assert result.exit_code == 0, "should exit cleanly"
+        assert (
+            logging.root.hasHandlers() is True
+        ), "root logger should now have a handler"
+        assert (
+            logging.getLevelName(logging.root.getEffectiveLevel()) == level.upper()
+        ), f"root logger level should be set to {level.upper()}"
 
 
 def test_bad_log_level():
     """Validate bad log-level argument returns error."""
-    with patch.object(sys, "argv", ["bogus", "--log-level=emergency", "1", "1"]):
-        return_code = None
-        try:
-            example.example.main()
-        except SystemExit as sys_exit:
-            return_code = sys_exit.code
-        assert return_code == 2, "main() should exit with error"
+    runner = CliRunner()
+    result = runner.invoke(example.example.example, ["--log-level=emergency", "1", "1"])
+    assert result.exit_code == 2, "should exit with return code 2"
 
 
 @pytest.mark.parametrize("dividend, divisor, quotient", div_params)
@@ -134,10 +127,6 @@ def test_zero_division():
 
 def test_zero_divisor_argument():
     """Verify that a divisor of zero is handled as expected."""
-    with patch.object(sys, "argv", ["bogus", "1", "0"]):
-        return_code = None
-        try:
-            example.example.main()
-        except SystemExit as sys_exit:
-            return_code = sys_exit.code
-        assert return_code == 2, "main() should exit with error"
+    runner = CliRunner()
+    result = runner.invoke(example.example.example, ["1", "0"])
+    assert result.exit_code == 2, "should exit with return code 2"
