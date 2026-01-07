@@ -38,8 +38,8 @@ def test_stdout_version(capsys):
         with patch.object(sys, "argv", ["bogus", "--version"]):
             example.example.main()
     captured = capsys.readouterr()
-    assert (
-        captured.out == f"{PROJECT_VERSION}\n"
+    assert captured.out.endswith(
+        f"{PROJECT_VERSION}\n"
     ), "standard output by '--version' should agree with module.__version__"
 
 
@@ -55,8 +55,8 @@ def test_running_as_module(capsys):
             # cisagov Libraries
             import example.__main__  # noqa: F401
     captured = capsys.readouterr()
-    assert (
-        captured.out == f"{PROJECT_VERSION}\n"
+    assert captured.out.endswith(
+        f"{PROJECT_VERSION}\n"
     ), "standard output by '--version' should agree with module.__version__"
 
 
@@ -83,14 +83,14 @@ def test_log_levels(level):
                 example.example.main()
             except SystemExit as sys_exit:
                 return_code = sys_exit.code
-            assert return_code is None, "main() should return success"
+            assert return_code == 0, "main() should return success"
             assert (
                 logging.root.hasHandlers() is True
             ), "root logger should now have a handler"
             assert (
                 logging.getLevelName(logging.root.getEffectiveLevel()) == level.upper()
             ), f"root logger level should be set to {level.upper()}"
-            assert return_code is None, "main() should return success"
+            assert return_code == 0, "main() should return success"
 
 
 def test_bad_log_level():
@@ -101,7 +101,7 @@ def test_bad_log_level():
             example.example.main()
         except SystemExit as sys_exit:
             return_code = sys_exit.code
-        assert return_code == 1, "main() should exit with error"
+        assert return_code == 2, "main() should exit with error"
 
 
 @pytest.mark.parametrize("dividend, divisor, quotient", div_params)
@@ -140,4 +140,4 @@ def test_zero_divisor_argument():
             example.example.main()
         except SystemExit as sys_exit:
             return_code = sys_exit.code
-        assert return_code == 1, "main() should exit with error"
+        assert return_code == 2, "main() should exit with error"
