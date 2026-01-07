@@ -43,8 +43,8 @@ classifiers = [
     "Programming Language :: Python :: Implementation :: CPython",
 ]
 dependencies = [
-    "docopt",
-    "schema",
+    "click>=8.3.1",
+    "rich>=14.2.0",
 ]
 description = "Example Python library"
 dynamic = ["readme", "version"]
@@ -63,7 +63,6 @@ requires-python = ">=3.10"
 dev = [
     "build",
     "twine",
-    "types-docopt",
 ]
 test = [
     "coverage",

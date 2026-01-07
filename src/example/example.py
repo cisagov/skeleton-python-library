@@ -7,16 +7,6 @@ EXIT STATUS
     This utility exits with one of the following values:
     0   Calculation completed successfully.
     >0  An error occurred.
-
-Usage:
-  example [--log-level=LEVEL] <dividend> <divisor>
-  example (-h | --help)
-
-Options:
-  -h --help              Show this message.
-  --log-level=LEVEL      If specified, then the log level will be set to
-                         the specified value.  Valid values are "debug", "info",
-                         "warning", "error", and "critical". [default: info]
 """
 
 # Standard Python Libraries
@@ -24,18 +14,24 @@ from importlib.resources import files
 import logging
 import os
 import sys
-from typing import Any
 
 # Third-Party Libraries
-import docopt
-
-# There are no type stubs for the schema library, so mypy requires the type:
-# ignore hint.
-from schema import And, Schema, SchemaError, Use  # type: ignore
+import click
+from rich.logging import RichHandler
 
 from ._version import __version__
 
 DEFAULT_ECHO_MESSAGE: str = "Hello World from the example default!"
+LOG_LEVELS: list[str] = list()
+if sys.version_info.minor > 10:
+    LOG_LEVELS = [*logging.getLevelNamesMapping()]
+else:
+    LOG_LEVELS = [
+        logging.getLevelName(x)
+        for x in range(0, 101)
+        if not logging.getLevelName(x).startswith("Level")
+    ]
+CONTEXT_SETTINGS = dict(help_option_names=["-h", "--help"])
 
 
 def example_div(dividend: int, divisor: int) -> float:
@@ -48,44 +44,40 @@ def example_div(dividend: int, divisor: int) -> float:
     return dividend / divisor
 
 
-def main() -> None:
-    """Set up logging and call the example function."""
-    args: dict[str, str] = docopt.docopt(__doc__, version=__version__)
-    # Validate and convert arguments as needed
-    schema: Schema = Schema(
-        {
-            "--log-level": And(
-                str,
-                Use(str.lower),
-                lambda n: n in ("debug", "info", "warning", "error", "critical"),
-                error="Possible values for --log-level are "
-                + "debug, info, warning, error, and critical.",
-            ),
-            "<dividend>": Use(int, error="<dividend> must be an integer."),
-            "<divisor>": And(
-                Use(int),
-                lambda n: n != 0,
-                error="<divisor> must be an integer that is not 0.",
-            ),
-            str: object,  # Don't care about other keys, if any
-        }
-    )
+def divisor_callback(ctx: click.Context, param: click.Parameter, value: int):
+    """Verify that the value is nonzero."""
+    if value == 0:
+        raise click.BadParameter("divisor must be nonzero")
 
-    try:
-        validated_args: dict[str, Any] = schema.validate(args)
-    except SchemaError as err:
-        # Exit because one or more of the arguments were invalid
-        print(err, file=sys.stderr)
-        sys.exit(1)
+    return value
 
-    # Assign validated arguments to variables
-    dividend: int = validated_args["<dividend>"]
-    divisor: int = validated_args["<divisor>"]
-    log_level: str = validated_args["--log-level"]
 
+@click.command(context_settings=CONTEXT_SETTINGS)
+@click.argument("dividend", type=click.INT)
+@click.argument("divisor", callback=divisor_callback, type=click.INT)
+@click.option(
+    "-l",
+    "--log-level",
+    default="info",
+    help="The logging level.",
+    type=click.Choice(LOG_LEVELS, case_sensitive=False),
+)
+@click.version_option(version=__version__)
+def example(
+    dividend: int,
+    divisor: int,
+    log_level: str = "info",
+) -> None:
+    """Set up logging and call the division function.
+
+    DIVIDEND is the integer dividend.
+    DIVISOR is the nonzero integer divisor.
+    """
     # Set up logging
     logging.basicConfig(
-        format="%(asctime)-15s %(levelname)s %(message)s", level=log_level.upper()
+        format="%(asctime)-15s %(levelname)s %(message)s",
+        level=log_level.upper(),
+        handlers=[RichHandler(rich_tracebacks=True)],
     )
 
     logging.info("%d / %d == %f", dividend, divisor, example_div(dividend, divisor))
@@ -102,3 +94,8 @@ def main() -> None:
 
     # Stop logging and clean up
     logging.shutdown()
+
+
+def main() -> None:
+    """Run the CLI."""
+    example()
