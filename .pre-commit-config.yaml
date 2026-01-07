@@ -171,8 +171,7 @@ repos:
         # mypy pre-commit hook additional_dependencies in sync with
         # the dev section of pyproject.toml to avoid discrepancies in
         # type checking between environments.
-        additional_dependencies:
-          - types-docopt
+        additional_dependencies: []
   - repo: https://github.com/pypa/pip-audit
     rev: v2.9.0
     hooks:
