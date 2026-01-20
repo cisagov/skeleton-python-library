@@ -126,14 +126,11 @@ jobs:
             packer${{ steps.setup-env.outputs.packer-version }}-\
             tf${{ steps.setup-env.outputs.terraform-version }}-
         with:
-          # We do not use '**/setup.py' in the cache key so only the 'setup.py'
-          # file in the root of the repository is used. This is in case a Python
-          # package were to have a 'setup.py' as part of its internal codebase.
           key: ${{ env.BASE_CACHE_KEY }}\
             ${{ hashFiles('**/requirements-test.txt') }}-\
             ${{ hashFiles('**/requirements.txt') }}-\
             ${{ hashFiles('**/.pre-commit-config.yaml') }}-\
-            ${{ hashFiles('setup.py') }}
+            ${{ hashFiles('pyproject.toml') }}
           # Note that the .terraform directory IS NOT included in the
           # cache because if we were caching, then we would need to use
           # the `-upgrade=true` option. This option blindly pulls down the
@@ -263,13 +260,10 @@ jobs:
             py${{ steps.setup-python.outputs.python-version }}-
         with:
           path: ${{ env.PIP_CACHE_DIR }}
-          # We do not use '**/setup.py' in the cache key so only the 'setup.py'
-          # file in the root of the repository is used. This is in case a Python
-          # package were to have a 'setup.py' as part of its internal codebase.
           key: ${{ env.BASE_CACHE_KEY }}\
             ${{ hashFiles('**/requirements-test.txt') }}-\
             ${{ hashFiles('**/requirements.txt') }}-\
-            ${{ hashFiles('setup.py') }}
+            ${{ hashFiles('pyproject.toml') }}
           restore-keys: |
             ${{ env.BASE_CACHE_KEY }}
       - name: Install dependencies
@@ -389,12 +383,9 @@ jobs:
             py${{ steps.setup-python.outputs.python-version }}-
         with:
           path: ${{ env.PIP_CACHE_DIR }}
-          # We do not use '**/setup.py' in the cache key so only the 'setup.py'
-          # file in the root of the repository is used. This is in case a Python
-          # package were to have a 'setup.py' as part of its internal codebase.
           key: ${{ env.BASE_CACHE_KEY }}\
             ${{ hashFiles('**/requirements.txt') }}-\
-            ${{ hashFiles('setup.py') }}
+            ${{ hashFiles('pyproject.toml') }}
           restore-keys: |
             ${{ env.BASE_CACHE_KEY }}
       - name: Install build dependencies
@@ -475,12 +466,9 @@ jobs:
             py${{ steps.setup-python.outputs.python-version }}-
         with:
           path: ${{ env.PIP_CACHE_DIR }}
-          # We do not use '**/setup.py' in the cache key so only the 'setup.py'
-          # file in the root of the repository is used. This is in case a Python
-          # package were to have a 'setup.py' as part of its internal codebase.
           key: ${{ env.BASE_CACHE_KEY }}\
             ${{ hashFiles('**/requirements.txt') }}-\
-            ${{ hashFiles('setup.py') }}
+            ${{ hashFiles('pyproject.toml') }}
           restore-keys: |
             ${{ env.BASE_CACHE_KEY }}
       - name: Retrieve the built wheel
