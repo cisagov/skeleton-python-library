@@ -490,3 +490,113 @@ jobs:
       - name: Setup tmate debug session
         uses: mxschmitt/action-tmate@v3
         if: env.RUN_TMATE
+  generate-sbom:
+    # Generate an SBOM for the Docker image and, if there is a
+    # release, upload it as an asset to the release.
+    #
+    # This job is located in this workflow as opposed to a separate
+    # release workflow because it can only run after the wheels have
+    # been generated in the build job.  Putting it in a separate
+    # release workflow would require us to introduce a dependency of
+    # the release workflow on this one.
+    if: github.event_name != 'pull_request'
+    name: Generate and upload SBOM
+    needs:
+      - build
+      - diagnostics
+    permissions:
+      # Allows us to read the SBOM artifact
+      actions: read
+      artifact-metadata: write
+      attestations: write
+      # Allows us to add the SBOM to the release.  Also,
+      # actions/checkout needs read permission to fetch code.
+      contents: write
+      # Allows the workflow to mint the OIDC token necessary to
+      # request a Sigstore signing certificate.
+      id-token: write
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version:
+          - "3.10"
+          - "3.11"
+          - "3.12"
+          - "3.13"
+          - "3.14"
+        sbom-format:
+          - cyclonedx-json
+          - spdx-json
+    steps:
+      - name: Apply standard cisagov job preamble
+        uses: cisagov/action-job-preamble@v1
+        with:
+          # This functionality is poorly implemented and has been
+          # causing problems due to the MITM implementation hogging or
+          # leaking memory.  As a result we disable it by default.  If
+          # you want to temporarily enable it, simply set
+          # monitor_permissions equal to "true".
+          #
+          # TODO: Re-enable this functionality when practical.  See
+          # cisagov/skeleton-docker#224 for more details.
+          monitor_permissions: "false"
+          # Use a variable to specify the permissions monitoring
+          # configuration. By default this will yield the
+          # configuration stored in the cisagov organization-level
+          # variable, but if you want to use a different configuration
+          # then simply:
+          # 1. Create a repository-level variable with the name
+          # ACTIONS_PERMISSIONS_CONFIG.
+          # 2. Set this new variable's value to the configuration you
+          # want to use for this repository.
+          #
+          # Note in particular that changing the permissions
+          # monitoring configuration *does not* require you to modify
+          # this workflow.
+          permissions_monitoring_config: ${{ vars.ACTIONS_PERMISSIONS_CONFIG }}
+      - id: setup-env
+        uses: cisagov/setup-env-github-action@v1
+      - uses: actions/checkout@v6
+      - id: setup-python
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ steps.setup-env.outputs.python-version }}
+      - uses: actions/cache@v4
+        env:
+          BASE_CACHE_KEY: ${{ github.job }}-\
+            ${{ runner.os }}-${{ runner.arch }}-\
+            py${{ steps.setup-python.outputs.python-version }}-
+        with:
+          path: ${{ env.PIP_CACHE_DIR }}
+          key: ${{ env.BASE_CACHE_KEY }}\
+            ${{ hashFiles('pyproject.toml') }}
+          restore-keys: |
+            ${{ env.BASE_CACHE_KEY }}
+      - name: Retrieve the built wheel
+        uses: actions/download-artifact@v7
+        with:
+          name: dist-${{ matrix.python-version }}
+          path: dist
+      - id: find-wheel
+        name: Get the name of the retrieved wheel (there should only be one)
+        run: echo "wheel=$(ls dist/*whl)" >> $GITHUB_OUTPUT
+      - name: Update core Python packages
+        run: python -m pip install --upgrade pip setuptools wheel
+      - name: Install pipenv
+        run: pip install --upgrade pipenv
+      - name: Install the built wheel into a Pipfile
+        run: pipenv install ${{ steps.find-wheel.outputs.wheel }}
+      - name: Lock the Pipfile
+        run: pipenv lock
+      - name: Gemerate SBOM
+        uses: anchore/sbom-action@v0
+        with:
+          artifact-name: sbom.py${{ matrix.python-version }}.${{ matrix.sbom-format }}
+          file: Pipfile.lock
+          format: ${{ matrix.sbom-format }}
+          output-file: sbom.py${{ matrix.python-version }}.${{ matrix.sbom-format }}
+      - name: Attest build provenance for the SBOM
+        uses: actions/attest-build-provenance@v3
+        with:
+          subject-path: sbom.py${{ matrix.python-version }}.${{ matrix.sbom-format }}
