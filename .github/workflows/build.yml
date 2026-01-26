@@ -589,14 +589,27 @@ jobs:
         run: pipenv install ${{ steps.find-wheel.outputs.wheel }}
       - name: Lock the Pipfile
         run: pipenv lock
-      - name: Gemerate SBOM
+      - name: Manipulate the repo name into the preferred format
+        id: manipulate-repo-name
+        run: |
+          NEW_NAME=$(echo "${{ github.repository}}" \
+          | tr '[:upper:]' '[:lower:]' \
+          | tr '/ ' '-')
+          echo "repo-name=${NEW_NAME}" >> $GITHUB_OUTPUT
+      - name: Generate SBOM
         uses: anchore/sbom-action@v0
         with:
-          artifact-name: sbom.py${{ matrix.python-version }}.${{ matrix.sbom-format }}
+          artifact-name: >-
+            ${{ steps.manipulate-repo-name.outputs.repo-name }}.py${{
+            matrix.python-version }}.${{ matrix.sbom-format }}
           file: Pipfile.lock
           format: ${{ matrix.sbom-format }}
-          output-file: sbom.py${{ matrix.python-version }}.${{ matrix.sbom-format }}
+          output-file: >-
+            ${{ steps.manipulate-repo-name.outputs.repo-name }}.py${{
+            matrix.python-version }}.${{ matrix.sbom-format }}
       - name: Attest build provenance for the SBOM
         uses: actions/attest-build-provenance@v3
         with:
-          subject-path: sbom.py${{ matrix.python-version }}.${{ matrix.sbom-format }}
+          subject-path: >-
+            ${{ steps.manipulate-repo-name.outputs.repo-name }}.py${{
+            matrix.python-version }}.${{ matrix.sbom-format }}
