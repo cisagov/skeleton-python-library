@@ -63,7 +63,7 @@ repos:
 
   # GitHub Actions hooks
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.35.0
+    rev: 0.36.1
     hooks:
       - id: check-github-actions
       - id: check-github-workflows
