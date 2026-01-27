@@ -499,6 +499,9 @@ jobs:
     # been generated in the build job.  Putting it in a separate
     # release workflow would require us to introduce a dependency of
     # the release workflow on this one.
+    #
+    # This if statement is present to keep the push and pull_request
+    # events from both causing the job to be run.
     if: github.event_name != 'pull_request'
     name: Generate and upload SBOM
     needs:
