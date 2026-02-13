@@ -564,12 +564,12 @@ jobs:
       - id: setup-python
         uses: actions/setup-python@v6
         with:
-          python-version: ${{ steps.setup-env.outputs.python-version }}
+          python-version: ${{ matrix.python-version }}
       - uses: actions/cache@v4
         env:
           BASE_CACHE_KEY: ${{ github.job }}-\
             ${{ runner.os }}-${{ runner.arch }}-\
-            py${{ steps.setup-python.outputs.python-version }}-
+            py${{ matrix.python-version }}-
         with:
           path: ${{ env.PIP_CACHE_DIR }}
           key: ${{ env.BASE_CACHE_KEY }}\
