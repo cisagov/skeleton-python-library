@@ -567,13 +567,15 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - uses: actions/cache@v5
         env:
-          BASE_CACHE_KEY: ${{ github.job }}-\
-            ${{ runner.os }}-${{ runner.arch }}-\
-            py${{ matrix.python-version }}-
+          BASE_CACHE_KEY: >-
+            ${{ github.job }}-${{
+            runner.os }}-${{ runner.arch }}-py${{
+            matrix.python-version }}-
         with:
           path: ${{ env.PIP_CACHE_DIR }}
-          key: ${{ env.BASE_CACHE_KEY }}\
-            ${{ hashFiles('pyproject.toml') }}
+          key: >-
+            ${{ env.BASE_CACHE_KEY }}${{
+            hashFiles('pyproject.toml') }}
           restore-keys: |
             ${{ env.BASE_CACHE_KEY }}
       - name: Retrieve the built wheel
