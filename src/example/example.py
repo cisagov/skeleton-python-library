@@ -40,7 +40,7 @@ CONTEXT_SETTINGS: MutableMapping[str, Any] = dict(help_option_names=["-h", "--he
 
 
 def divide(dividend: int, divisor: int) -> float:
-    """Print some logging messages."""
+    """Divide dividend by divisor, log messages at various levels, and return the quotient."""
     logging.debug("This is a debug message")
     logging.info("This is an info message")
     logging.warning("This is a warning message")
