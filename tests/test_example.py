@@ -33,7 +33,7 @@ RELEASE_TAG = os.getenv("RELEASE_TAG")
 PROJECT_VERSION = example.__version__
 
 
-def test_stdout_version(capsys):
+def test_stdout_version():
     """Verify that version string sent to stdout agrees with the module version."""
     runner = CliRunner()
     result = runner.invoke(example.setup_logging_and_divide, ["--version"])
