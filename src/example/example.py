@@ -67,7 +67,7 @@ def divisor_callback(ctx: click.Context, param: click.Parameter, value: int):
     help="The logging level.",
     type=click.Choice(LOG_LEVELS, case_sensitive=False),
 )
-@click.version_option(version=__version__)
+@click.version_option(version=__version__, message="%(version)s")
 def setup_logging_and_divide(
     dividend: int,
     divisor: int,
