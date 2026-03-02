@@ -484,7 +484,7 @@ jobs:
           restore-keys: |
             ${{ env.BASE_CACHE_KEY }}
       - name: Retrieve the built wheel
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: dist-${{ matrix.python-version }}
           path: dist
