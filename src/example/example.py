@@ -25,7 +25,7 @@ from ._version import __version__
 
 DEFAULT_ECHO_MESSAGE: str = "Hello World from the example default!"
 LOG_LEVELS: list[str] = list()
-if sys.version_info.minor > 10:
+if sys.version_info >= (3, 11):
     LOG_LEVELS = [*logging.getLevelNamesMapping()]
 else:
     # The logging.getLevelNamesMapping method was only introduced in
