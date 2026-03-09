@@ -491,8 +491,8 @@ jobs:
         uses: mxschmitt/action-tmate@v3
         if: env.RUN_TMATE
   generate-sbom:
-    # Generate SBOMs for the built Python wheel packages and, if there is a
-    # release, upload them as assets to the release.
+    # Generate SBOMs for the built Python wheel packages and, if there
+    # is a release, upload them as assets to the release.
     #
     # This job is located in this workflow as opposed to a separate
     # release workflow because it can only run after the wheels have
