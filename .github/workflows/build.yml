@@ -612,9 +612,10 @@ jobs:
           output-file: >-
             ${{ steps.manipulate-repo-name.outputs.repo-name }}.py${{
             matrix.python-version }}.${{ matrix.sbom-format }}
-      - name: Attest build provenance for the SBOM
-        uses: actions/attest-build-provenance@v3
+      - name: Create SBOM attestation
+        uses: actions/attest@v4
         with:
-          subject-path: >-
+          sbom-path: >-
             ${{ steps.manipulate-repo-name.outputs.repo-name }}.py${{
             matrix.python-version }}.${{ matrix.sbom-format }}
+          subject-path: dist
