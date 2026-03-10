@@ -49,7 +49,7 @@ def divide(dividend: int, divisor: int) -> float:
     return dividend / divisor
 
 
-def divisor_callback(ctx: click.Context, param: click.Parameter, value: int):
+def divisor_callback(ctx: click.Context, param: click.Parameter, value: int) -> int:
     """Verify that the value is nonzero."""
     if value == 0:
         raise click.BadParameter("divisor must be nonzero")
