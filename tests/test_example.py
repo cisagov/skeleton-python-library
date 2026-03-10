@@ -38,8 +38,8 @@ def test_stdout_version():
     runner = CliRunner()
     result = runner.invoke(example.setup_logging_and_divide, ["--version"])
     assert result.exit_code == 0, "should exit cleanly"
-    assert result.output.endswith(
-        f"{PROJECT_VERSION}\n"
+    assert (
+        result.output == f"{PROJECT_VERSION}\n"
     ), "standard output by '--version' should agree with module.__version__"
 
 
@@ -55,8 +55,8 @@ def test_running_as_module(capsys):
             # cisagov Libraries
             import example.__main__  # noqa: F401
     captured = capsys.readouterr()
-    assert captured.out.endswith(
-        f"{PROJECT_VERSION}\n"
+    assert (
+        captured.out == f"{PROJECT_VERSION}\n"
     ), "standard output by '--version' should agree with module.__version__"
 
 
