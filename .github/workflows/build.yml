@@ -510,6 +510,7 @@ jobs:
     permissions:
       # Allows us to read the SBOM artifact
       actions: read
+      # Necessary to create the artifact storage record
       artifact-metadata: write
       attestations: write
       # Allows us to add the SBOM to the release.  Also,
@@ -612,7 +613,13 @@ jobs:
           output-file: >-
             ${{ steps.manipulate-repo-name.outputs.repo-name }}.py${{
             matrix.python-version }}.${{ matrix.sbom-format }}
-      - name: Create SBOM attestation
+      - name: Create provenance attestation for SBOM
+        uses: actions/attest@v4
+        with:
+          subject-path: >-
+            ${{ steps.manipulate-repo-name.outputs.repo-name }}.py${{
+            matrix.python-version }}.${{ matrix.sbom-format }}
+      - name: Create SBOM attestation for distribution package
         uses: actions/attest@v4
         with:
           sbom-path: >-
