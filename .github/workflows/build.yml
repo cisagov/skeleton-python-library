@@ -333,8 +333,17 @@ jobs:
       - lint
       - test
     permissions:
-      # actions/checkout needs this to fetch code
-      contents: read
+      # Allows us to read artifacts
+      actions: read
+      # Necessary to create the artifact storage record
+      artifact-metadata: write
+      attestations: write
+      # Allows us to add the SBOM to the release.  Also,
+      # actions/checkout needs read permission to fetch code.
+      contents: write
+      # Allows the workflow to mint the OIDC token necessary to
+      # request a Sigstore signing certificate.
+      id-token: write
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -399,6 +408,10 @@ jobs:
         with:
           name: dist-${{ matrix.python-version }}
           path: dist
+      - name: Create provenance attestation for distribution
+        uses: actions/attest@v4
+        with:
+          subject-path: dist
       - name: Setup tmate debug session
         uses: mxschmitt/action-tmate@v3
         if: env.RUN_TMATE
