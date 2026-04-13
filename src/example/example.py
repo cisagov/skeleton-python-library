@@ -36,7 +36,7 @@ else:
         if not logging.getLevelName(x).startswith("Level")
     ]
 # Context settings for click
-CONTEXT_SETTINGS: MutableMapping[str, Any] = dict(help_option_names=["-h", "--help"])
+CONTEXT_SETTINGS: MutableMapping[str, Any] = {"help_option_names": ["-h", "--help"]}
 
 
 def divide(dividend: int, divisor: int) -> float:
