@@ -204,7 +204,7 @@ jobs:
       - name: Setup tmate debug session
         uses: mxschmitt/action-tmate@v3
         if: env.RUN_TMATE
-  test:
+  test-source:
     name: test source - py${{ matrix.python-version }} - ${{ matrix.platform }}
     needs:
       - diagnostics
@@ -299,7 +299,7 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - diagnostics
-      - test
+      - test-source
     steps:
       - name: Apply standard cisagov job preamble
         uses: cisagov/action-job-preamble@v1
@@ -335,12 +335,10 @@ jobs:
       - name: Setup tmate debug session
         uses: mxschmitt/action-tmate@v3
         if: env.RUN_TMATE
-  build:
+  build-wheel:
     name: build wheel - py${{ matrix.python-version }}
     needs:
       - diagnostics
-      - lint
-      - test
     permissions:
       # Allows us to read artifacts
       actions: read
@@ -426,11 +424,12 @@ jobs:
       - name: Setup tmate debug session
         uses: mxschmitt/action-tmate@v3
         if: env.RUN_TMATE
-  test-build:
+  test-wheel:
     name: test built wheel - py${{ matrix.python-version }} - ${{ matrix.platform }}
     needs:
       - diagnostics
-      - build
+      - build-wheel
+      - test-source
     permissions:
       # actions/checkout needs this to fetch code
       contents: read
