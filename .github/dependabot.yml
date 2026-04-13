@@ -7,6 +7,11 @@
 
 updates:
   - directory: /
+    groups:
+      upload-download-artifact:
+        patterns:
+          - actions/download-artifact
+          - actions/upload-artifact
     ignore:
       # Managed by cisagov/skeleton-generic
       - dependency-name: actions/cache
