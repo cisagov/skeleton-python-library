@@ -40,7 +40,7 @@ CONTEXT_SETTINGS: MutableMapping[str, Any] = {"help_option_names": ["-h", "--hel
 
 
 def divide(dividend: int, divisor: int) -> float:
-    """Divide dividend by divisor, log messages at various levels, and return the quotient."""
+    """Perform division, log messages at various levels, and return quotient."""
     logging.debug("This is a debug message")
     logging.info("This is an info message")
     logging.warning("This is a warning message")
