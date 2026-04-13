@@ -24,7 +24,7 @@ from rich.logging import RichHandler
 from ._version import __version__
 
 DEFAULT_ECHO_MESSAGE: str = "Hello World from the example default!"
-LOG_LEVELS: list[str] = list()
+LOG_LEVELS: list[str] = []
 if sys.version_info >= (3, 11):
     LOG_LEVELS = [*logging.getLevelNamesMapping()]
 else:
