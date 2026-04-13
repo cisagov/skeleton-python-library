@@ -613,7 +613,7 @@ jobs:
         name: Get the name of the retrieved wheel (there should only be one)
         run: echo "wheel=$(ls dist/*whl)" >> $GITHUB_OUTPUT
       - name: Update core Python packages
-        run: python -m pip install --upgrade pip setuptools wheel
+        run: python -m pip install --upgrade pip setuptools
       - name: Install pipenv
         run: pip install --upgrade pipenv
       - name: Install the built wheel into a Pipfile
