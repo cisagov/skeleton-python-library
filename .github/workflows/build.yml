@@ -530,7 +530,7 @@ jobs:
     if: github.event_name != 'pull_request'
     name: Generate and upload SBOM
     needs:
-      - build
+      - build-wheel
       - diagnostics
     permissions:
       # Allows us to read the SBOM artifact
