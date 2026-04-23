@@ -2,40 +2,45 @@
 
 Divide one integer by another and log the result. Also log some information
 from an environment variable and a package resource.
-
-EXIT STATUS
-    This utility exits with one of the following values:
-    0   Calculation completed successfully.
-    >0  An error occurred.
-
-Usage:
-  example [--log-level=LEVEL] <dividend> <divisor>
-  example (-h | --help)
-
-Options:
-  -h --help              Show this message.
-  --log-level=LEVEL      If specified, then the log level will be set to
-                         the specified value.  Valid values are "debug", "info",
-                         "warning", "error", and "critical". [default: info]
 """
 
 # Standard Python Libraries
+from dataclasses import dataclass
 from importlib.resources import files
 import logging
 import os
-import sys
-from typing import Any
+from typing import Annotated, Literal
 
 # Third-Party Libraries
-import docopt
-
-# There are no type stubs for the schema library, so mypy requires the type:
-# ignore hint.
-from schema import And, Schema, SchemaError, Use  # type: ignore
+import cappa
 
 from ._version import __version__
 
 DEFAULT_ECHO_MESSAGE: str = "Hello World from the example default!"
+
+
+@dataclass
+class Example:
+    """example is an example Python library and tool.
+
+    Divide one integer by another and log the result. Also log some information
+    from an environment variable and a package resource.
+    """
+
+    dividend: Annotated[int, cappa.Arg(help="The dividend. Must be an integer.")]
+    divisor: Annotated[int, cappa.Arg(help="The divisor. Must be a non-zero integer.")]
+    log_level: Annotated[
+        Literal["debug", "info", "warning", "error", "critical"],
+        cappa.Arg(
+            help="If specified, then the log level will be set to the specified value.",
+            long=True,
+        ),
+    ] = "info"
+
+    def __post_init__(self):
+        """Perform any validation of inputs."""
+        if self.divisor == 0:
+            raise ValueError("'divisor' must be an integer that is not 0.")
 
 
 def example_div(dividend: int, divisor: int) -> float:
@@ -50,45 +55,19 @@ def example_div(dividend: int, divisor: int) -> float:
 
 def main() -> None:
     """Set up logging and call the example function."""
-    args: dict[str, str] = docopt.docopt(__doc__, version=__version__)
-    # Validate and convert arguments as needed
-    schema: Schema = Schema(
-        {
-            "--log-level": And(
-                str,
-                Use(str.lower),
-                lambda n: n in ("debug", "info", "warning", "error", "critical"),
-                error="Possible values for --log-level are "
-                + "debug, info, warning, error, and critical.",
-            ),
-            "<dividend>": Use(int, error="<dividend> must be an integer."),
-            "<divisor>": And(
-                Use(int),
-                lambda n: n != 0,
-                error="<divisor> must be an integer that is not 0.",
-            ),
-            str: object,  # Don't care about other keys, if any
-        }
-    )
-
-    try:
-        validated_args: dict[str, Any] = schema.validate(args)
-    except SchemaError as err:
-        # Exit because one or more of the arguments were invalid
-        print(err, file=sys.stderr)
-        sys.exit(1)
-
-    # Assign validated arguments to variables
-    dividend: int = validated_args["<dividend>"]
-    divisor: int = validated_args["<divisor>"]
-    log_level: str = validated_args["--log-level"]
+    args: Example = cappa.parse(Example, completion=False, version=__version__)
 
     # Set up logging
     logging.basicConfig(
-        format="%(asctime)-15s %(levelname)s %(message)s", level=log_level.upper()
+        format="%(asctime)-15s %(levelname)s %(message)s", level=args.log_level.upper()
     )
 
-    logging.info("%d / %d == %f", dividend, divisor, example_div(dividend, divisor))
+    logging.info(
+        "%d / %d == %f",
+        args.dividend,
+        args.divisor,
+        example_div(args.dividend, args.divisor),
+    )
 
     # Access some data from an environment variable
     message: str = os.getenv("ECHO_MESSAGE", DEFAULT_ECHO_MESSAGE)
