@@ -101,7 +101,7 @@ def test_bad_log_level():
             example.example.main()
         except SystemExit as sys_exit:
             return_code = sys_exit.code
-        assert return_code == 1, "main() should exit with error"
+        assert return_code == 2, "main() should exit with error"
 
 
 @pytest.mark.parametrize("dividend, divisor, quotient", div_params)
@@ -140,4 +140,4 @@ def test_zero_divisor_argument():
             example.example.main()
         except SystemExit as sys_exit:
             return_code = sys_exit.code
-        assert return_code == 1, "main() should exit with error"
+        assert return_code == 2, "main() should exit with error"
