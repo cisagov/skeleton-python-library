@@ -42,8 +42,9 @@ updates:
     schedule:
       interval: weekly
 
-  - directory: /
-    package-ecosystem: terraform
-    schedule:
-      interval: weekly
+  # Uncomment this section if you have Terraform code in your project.
+  # - directory: /
+  #   package-ecosystem: terraform
+  #   schedule:
+  #     interval: weekly
 version: 2
