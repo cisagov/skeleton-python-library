@@ -35,7 +35,6 @@ updates:
   - directory: /
     # ignore:
     #   # Managed by cisagov/skeleton-generic
-    #   - dependency-name: ipython
     #   - dependency-name: pre-commit
     #   - dependency-name: semver
     #   - dependency-name: setuptools
