@@ -130,10 +130,10 @@ jobs:
             }}-tf${{ steps.setup-env.outputs.terraform-version }}-
         with:
           key: >-
-            ${{ env.BASE_CACHE_KEY }}${{
-            hashFiles('**/requirements-test.txt') }}-${{
-            hashFiles('**/requirements.txt') }}-${{
-            hashFiles('**/.pre-commit-config.yaml') }}
+            ${{ env.BASE_CACHE_KEY }}${{ hashFiles(
+            '**/requirements-test.txt',
+            '**/requirements.txt',
+            '**/.pre-commit-config.yaml') }}
           # Note that the .terraform directory IS NOT included in the
           # cache because if we were caching, then we would need to use
           # the `-upgrade=true` option. This option blindly pulls down the
