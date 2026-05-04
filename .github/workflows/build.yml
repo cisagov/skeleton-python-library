@@ -116,10 +116,11 @@ jobs:
           # it relies on the existence of a go.sum file.
           cache: false
           go-version: ${{ steps.setup-env.outputs.go-version }}
-      - id: go-cache
-        name: Lookup Go cache directory
+      - id: go-dirs
+        name: Lookup Go directories to cache
         run: |
-          echo "dir=$(go env GOCACHE)" >> $GITHUB_OUTPUT
+          echo "gocache=$(go env GOCACHE)" >> $GITHUB_OUTPUT
+          echo "gomodcache=$(go env GOMODCACHE)" >> $GITHUB_OUTPUT
       - uses: actions/cache@v5
         env:
           BASE_CACHE_KEY: >-
@@ -143,7 +144,8 @@ jobs:
           path: |
             ${{ env.PIP_CACHE_DIR }}
             ${{ env.PRE_COMMIT_CACHE_DIR }}
-            ${{ steps.go-cache.outputs.dir }}
+            ${{ steps.go-dirs.outputs.gocache }}
+            ${{ steps.go-dirs.outputs.gomodcache }}
           restore-keys: |
             ${{ env.BASE_CACHE_KEY }}
       - uses: hashicorp/setup-packer@v3
