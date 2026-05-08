@@ -54,10 +54,10 @@
   description: This pull request is ready to merge during the next Lineage Kraken release
   name: kraken 🐙
 - color: ff0000
-  description: This changes in this pull request call for a major version bump
+  description: The changes in this pull request call for a major version bump
   name: major
 - color: 0000ff
-  description: This changes in this pull request call for a minor version bump
+  description: The changes in this pull request call for a minor version bump
   name: minor
 - color: a4fc5d
   description: This issue or pull request requires further information
@@ -69,7 +69,7 @@
   description: Pull requests that update Packer code
   name: packer
 - color: 00ff00
-  description: This changes in this pull request call for a patch version bump
+  description: The changes in this pull request call for a patch version bump
   name: patch
 - color: 3776ab
   description: Pull requests that update Python code
