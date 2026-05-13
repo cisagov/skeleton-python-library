@@ -220,7 +220,7 @@ repos:
         # https://github.com/ansible/ansible-lint/blob/eefc3626bb341032d5a80288735cca6441c9c873/pyproject.toml#L9
         # [3]:
         # https://github.com/cisagov/setup-env-github-action/blob/8567c2291ccdf5b84c297b487f592606f3af214f/src/versions.js#L27
-        language_version: "3.13"
+        language_version: python3.13
 
   # Terraform hooks
   - repo: https://github.com/antonbabenko/pre-commit-terraform
