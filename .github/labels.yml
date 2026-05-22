@@ -56,7 +56,7 @@
 - color: ff0000
   description: The changes in this pull request call for a major version bump
   name: major
-- color: 0000ff
+- color: 00ff00
   description: The changes in this pull request call for a minor version bump
   name: minor
 - color: a4fc5d
@@ -68,7 +68,7 @@
 - color: 02a8ef
   description: Pull requests that update Packer code
   name: packer
-- color: 00ff00
+- color: 0000ff
   description: The changes in this pull request call for a patch version bump
   name: patch
 - color: 3776ab
