@@ -227,6 +227,7 @@ repos:
   - repo: https://github.com/antonbabenko/pre-commit-terraform
     rev: v1.105.0
     hooks:
+      - id: terraform_docs
       - id: terraform_fmt
       - id: terraform_validate
       # This needs to run after the terraform_validate hook so that any Terraform
