@@ -252,3 +252,12 @@ repos:
     hooks:
       - id: packer_fmt
       - id: packer_validate
+  # We're using terraform-docs to generate Packer template documentation
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.105.0
+    hooks:
+      - id: terraform_docs
+        # Override the files to run against Packer templates
+        files: \.pkr\.hcl
+        # Override the name to include mention of Packer
+        name: Terraform docs (Packer templates)
