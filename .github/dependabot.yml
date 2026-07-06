@@ -36,6 +36,7 @@ updates:
     package-ecosystem: pip
     schedule:
       interval: weekly
+    versioning-strategy: increase-if-necessary
 
   - directory: /
     package-ecosystem: terraform
