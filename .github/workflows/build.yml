@@ -118,7 +118,7 @@ jobs:
         run: |
           echo "gocache=$(go env GOCACHE)" >> $GITHUB_OUTPUT
           echo "gomodcache=$(go env GOMODCACHE)" >> $GITHUB_OUTPUT
-      - uses: actions/cache@v5
+      - uses: actions/cache@v6
         env:
           BASE_CACHE_KEY: >-
             ${{ github.job }}-${{ runner.os
