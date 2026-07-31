@@ -160,22 +160,6 @@ repos:
     hooks:
       - id: pip-audit
         args:
-          # We have to ignore this vulnerability for now since an
-          # update for pygments has not yet been released.
-          #
-          # In any event, this vulnerability is unlikely to cause us
-          # any problems since we don't feed any regexes to pygments
-          # directly.  pygments is pulled in as a dependency of
-          # pytest.
-          #
-          # See also:
-          # - https://nvd.nist.gov/vuln/detail/CVE-2026-4539
-          # - https://github.com/pygments/pygments/issues/3058
-          #
-          # TODO: Remove this when it becomes possible.  See
-          # cisagov/skeleton-generic#257 for more details.
-          - --ignore-vuln
-          - CVE-2026-4539
           # Add any pip requirements files to scan
           - --requirement
           - requirements-dev.txt
