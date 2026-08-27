@@ -1,5 +1,2 @@
 --editable .[dev]
 --requirement requirements-test.txt
-mypy
-# The bump-version script requires at least version 3 of semver.
-semver>=3
