@@ -253,10 +253,10 @@ jobs:
         with:
           path: ${{ env.PIP_CACHE_DIR }}
           key: >-
-            ${{ env.BASE_CACHE_KEY }}${{
-            hashFiles('**/requirements-test.txt') }}-${{
-            hashFiles('**/requirements.txt') }}-${{
-            hashFiles('pyproject.toml') }}
+            ${{ env.BASE_CACHE_KEY }}${{ hashFiles(
+            '**/requirements-test.txt',
+            '**/requirements.txt',
+            'pyproject.toml') }}
           restore-keys: |
             ${{ env.BASE_CACHE_KEY }}
       - name: Install dependencies
@@ -376,9 +376,9 @@ jobs:
         with:
           path: ${{ env.PIP_CACHE_DIR }}
           key: >-
-            ${{ env.BASE_CACHE_KEY }}${{
-            hashFiles('**/requirements.txt') }}-${{
-            hashFiles('pyproject.toml') }}
+            ${{ env.BASE_CACHE_KEY }}${{ hashFiles(
+            '**/requirements.txt',
+            'pyproject.toml') }}
           restore-keys: |
             ${{ env.BASE_CACHE_KEY }}
       - name: Install build dependencies
@@ -462,9 +462,9 @@ jobs:
         with:
           path: ${{ env.PIP_CACHE_DIR }}
           key: >-
-            ${{ env.BASE_CACHE_KEY }}${{
-            hashFiles('**/requirements.txt') }}-${{
-            hashFiles('pyproject.toml') }}
+            ${{ env.BASE_CACHE_KEY }}${{ hashFiles(
+            '**/requirements.txt',
+            'pyproject.toml') }}
           restore-keys: |
             ${{ env.BASE_CACHE_KEY }}
       - name: Retrieve the built wheel
