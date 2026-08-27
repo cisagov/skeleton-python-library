@@ -239,7 +239,7 @@ jobs:
           # monitoring configuration *does not* require you to modify
           # this workflow.
           permissions_monitoring_config: ${{ vars.ACTIONS_PERMISSIONS_CONFIG }}
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - id: setup-python
         uses: actions/setup-python@v6
         with:
@@ -311,7 +311,7 @@ jobs:
           # monitoring configuration *does not* require you to modify
           # this workflow.
           permissions_monitoring_config: ${{ vars.ACTIONS_PERMISSIONS_CONFIG }}
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Finished coveralls reports
         uses: coverallsapp/github-action@v2
         with:
@@ -363,7 +363,7 @@ jobs:
           # monitoring configuration *does not* require you to modify
           # this workflow.
           permissions_monitoring_config: ${{ vars.ACTIONS_PERMISSIONS_CONFIG }}
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - id: setup-python
         uses: actions/setup-python@v6
         with:
@@ -448,7 +448,7 @@ jobs:
           # monitoring configuration *does not* require you to modify
           # this workflow.
           permissions_monitoring_config: ${{ vars.ACTIONS_PERMISSIONS_CONFIG }}
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - id: setup-python
         uses: actions/setup-python@v6
         with:
