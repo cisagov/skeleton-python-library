@@ -62,6 +62,9 @@ requires-python = ">=3.10"
 # checking between environments.
 dev = [
     "build",
+    "mypy",
+    # The bump-version script requires at least version 3 of semver.
+    "semver>=3",
     "twine",
     "types-docopt",
 ]
