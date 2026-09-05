@@ -28,8 +28,10 @@ updates:
       - dependency-name: hashicorp/setup-terraform
       - dependency-name: mxschmitt/action-tmate
       # # Managed by cisagov/skeleton-python-library
+      # - dependency-name: actions/attest
       # - dependency-name: actions/download-artifact
       # - dependency-name: actions/upload-artifact
+      # - dependency-name: anchore/sbom-action
     labels:
       # dependabot default we need to replicate
       - dependencies
